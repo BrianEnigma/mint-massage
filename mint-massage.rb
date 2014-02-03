@@ -1,9 +1,8 @@
 #!/usr/bin/ruby
 require "csv"
 
-f = File.new("expenses-2012.csv", "r")
-out_income = File.new("expenses-2012-income.csv", "w")
-out_expenses = File.new("expenses-2012-expenses.csv", "w")
+out_income = File.new("expenses-2013-income.csv", "w")
+out_expenses = File.new("expenses-2013-expenses.csv", "w")
 
 MAP = {
     "Cash & ATM" => "Cash",
@@ -107,39 +106,50 @@ MAP = {
     
 }
 
-# Read header
-f.readline()
+if 0 == ARGV.length
+    print "Error: put CSV file(s) on command line"
+    exit 1
+end
 
-f.each_line() { |line|
-    big_data = CSV::parse(line);
-    next if nil == big_data || nil == big_data[0] || nil == big_data[0][0]
-    data = big_data[0]
-    #print "#{line}\n"
-    #p big_data
+ARGV.each { |input_filename|
+
+    f = File.new(input_filename, "r")
+
+    # Read header
+    f.readline()
+
+    f.each_line() { |line|
+        big_data = CSV::parse(line);
+        next if nil == big_data || nil == big_data[0] || nil == big_data[0][0]
+        data = big_data[0]
+        #print "#{line}\n"
+        #p big_data
     
-    out = nil
-    if data[4] == "debit"
-        out = out_expenses
-    elsif data[4] == "credit"
-        out = out_income
-    else
-        throw "Unknown type #{data[4]}"
-    end
-    
-    category = MAP[data[5]]
-    if nil == category or category.length() == 0
-        p data
-        throw "Unknown category for #{data[5]}"
-    end
-    
-    data.each() { |item|
-        if (data[5] == item)
-            out << "\"#{category}\","
+        out = nil
+        if data[4] == "debit"
+            out = out_expenses
+        elsif data[4] == "credit"
+            out = out_income
+        else
+            throw "Unknown type #{data[4]}"
         end
-        item_clean = item.gsub('"', ' ')
-        out << "\"#{item_clean}\","
+    
+        category = MAP[data[5]]
+        if nil == category or category.length() == 0
+            p data
+            throw "Unknown category for #{data[5]}"
+        end
+    
+        data.each() { |item|
+            if (data[5] == item)
+                out << "\"#{category}\","
+            end
+            item_clean = item.gsub('"', ' ')
+            out << "\"#{item_clean}\","
+        }
+        out << "\n"
     }
-    out << "\n"
+    f.close()
 }
 
 out_income.close()
