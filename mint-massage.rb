@@ -17,6 +17,7 @@ MAP = {
     "Fast Food" => "Entertainment",
     "Food & Dining" => "Entertainment",
     "Entertainment" => "Entertainment",
+    "Books" => "Entertainment",
     
     "Student Loan" => "Financial",
     "Life Insurance" => "Financial",
@@ -28,12 +29,14 @@ MAP = {
     "Fees & Charges" => "Financial",
     "Financial Advisor" => "Financial",
     "Finance Charge" => "Financial",
+    "Late Fee" => "Financial",
 
     "Gift" => "Gift",
     "Charity" => "Gift",
 
     "Gym" => "Health",
     "Pharmacy" => "Health",
+    "Health & Fitness" => "Health",
 
     "Home Improvement" => "Home",
     "Furnishings" => "Home",
