@@ -14,4 +14,10 @@ If a transaction is found that doesn't yet have a mapping, the script exits by t
 
 **Input:** Put one or more CSV account exports on the command line.
 
-**Output:** Two files are creaded: expenses-2013-expenses.csv and expenses-2013-income.csv. One is only expenses, the other is only income. The categories have been normalized, as per the script's rules.
+**Output:** Two files are creaded: expenses-2015-expenses.csv and expenses-2015-income.csv. One is only expenses, the other is only income. The categories have been normalized, as per the script's rules.
+
+#Mint Sum-Sort
+
+##Purpose
+
+Sort by category, provide subtotals for each category.

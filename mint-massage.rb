@@ -1,9 +1,11 @@
 #!/usr/bin/ruby
 require "csv"
 
-out_income = File.new("expenses-2013-income.csv", "w")
-out_expenses = File.new("expenses-2013-expenses.csv", "w")
+# Output files for this year
+out_income = File.new("expenses-2015-income.csv", "w")
+out_expenses = File.new("expenses-2015-expenses.csv", "w")
 
+# Map specific categories to general categories
 MAP = {
     "Cash & ATM" => "Cash",
     "Transfer for Cash Spending" => "Cash",
@@ -30,6 +32,7 @@ MAP = {
     "Financial Advisor" => "Financial",
     "Finance Charge" => "Financial",
     "Late Fee" => "Financial",
+    "Legal" => "Financial",
 
     "Gift" => "Gift",
     "Charity" => "Gift",
@@ -101,6 +104,7 @@ MAP = {
     "Service & Parts" => "Vehicles",
     "Auto & Transport" => "Vehicles",
     "Parking" => "Vehicles",
+    "Auto Payment" => "Vehicles",
     
     "Uncategorized" => "Uncategorized",
     "Check" => "Uncategorized",
@@ -143,9 +147,12 @@ ARGV.each { |input_filename|
             throw "Unknown category for #{data[5]}"
         end
     
+        column = 0
         data.each() { |item|
-            if (data[5] == item)
+            column += 1
+            if (data[5] == item && column >= 3)
                 out << "\"#{category}\","
+                category_printed = true
             end
             item_clean = item.gsub('"', ' ')
             out << "\"#{item_clean}\","
