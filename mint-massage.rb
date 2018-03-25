@@ -2,8 +2,8 @@
 require "csv"
 
 # Output files for this year
-out_income = File.new("expenses-2015-income.csv", "w")
-out_expenses = File.new("expenses-2015-expenses.csv", "w")
+out_income = File.new("expenses-2016-income.csv", "w")
+out_expenses = File.new("expenses-2016-expenses.csv", "w")
 
 # Map specific categories to general categories
 MAP = {
@@ -20,7 +20,11 @@ MAP = {
     "Food & Dining" => "Entertainment",
     "Entertainment" => "Entertainment",
     "Books" => "Entertainment",
+    "Music" => "Entertainment",
     
+    "Education" => "Education",
+    "Tuition" => "Education",
+
     "Student Loan" => "Financial",
     "Life Insurance" => "Financial",
     "Credit Card Payment" => "Financial",
@@ -36,10 +40,12 @@ MAP = {
 
     "Gift" => "Gift",
     "Charity" => "Gift",
+    "Gifts & Donations" => "Gift",
 
     "Gym" => "Health",
     "Pharmacy" => "Health",
     "Health & Fitness" => "Health",
+    "Eyecare" => "Health",
 
     "Home Improvement" => "Home",
     "Furnishings" => "Home",
@@ -79,6 +85,7 @@ MAP = {
     "Shipping" => "Shopping",
     "Sporting Goods" => "Shopping",
     "Spa & Massage" => "Shopping",
+    "Printing" => "Shopping",
 
     "State Tax" => "Taxes",
     "Federal Tax" => "Taxes",
