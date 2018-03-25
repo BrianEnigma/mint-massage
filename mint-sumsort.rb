@@ -40,6 +40,7 @@ def append_category(filename, outfile, match_category)
         data = big_data[0]
         amount = data[3].to_f
         category = data[5]
+        data[1] = data[1] + ' — ' + data[9] if !data[9].empty?
         next if category != match_category
         outfile.write(CSV::generate_line(data));
         sum += amount

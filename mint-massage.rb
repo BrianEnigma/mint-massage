@@ -2,8 +2,8 @@
 require "csv"
 
 # Output files for this year
-out_income = File.new("expenses-2016-income.csv", "w")
-out_expenses = File.new("expenses-2016-expenses.csv", "w")
+out_income = File.new("expenses-2017-income.csv", "w")
+out_expenses = File.new("expenses-2017-expenses.csv", "w")
 
 # Map specific categories to general categories
 MAP = {
@@ -21,13 +21,13 @@ MAP = {
     "Entertainment" => "Entertainment",
     "Books" => "Entertainment",
     "Music" => "Entertainment",
+    "Television" => "Entertainment",
     
     "Education" => "Education",
     "Tuition" => "Education",
 
     "Student Loan" => "Financial",
     "Life Insurance" => "Financial",
-    "Credit Card Payment" => "Financial",
     "ATM Fee" => "Financial",
     "Bank Fee" => "Financial",
     "Financial" => "Financial",
@@ -86,9 +86,11 @@ MAP = {
     "Sporting Goods" => "Shopping",
     "Spa & Massage" => "Shopping",
     "Printing" => "Shopping",
+    "Newspapers & Magazines" => "Shopping",
 
     "State Tax" => "Taxes",
     "Federal Tax" => "Taxes",
+    "Local Tax" => "Taxes",
     "Taxes" => "Taxes",
     
     "Rental Car & Taxi" => "Travel",
@@ -116,8 +118,8 @@ MAP = {
     "Uncategorized" => "Uncategorized",
     "Check" => "Uncategorized",
 
-    "Transfer" => "Transfer"
-    
+    "Transfer" => "Transfer",
+    "Credit Card Payment" => "Transfer"
 }
 
 if 0 == ARGV.length
@@ -153,6 +155,8 @@ ARGV.each { |input_filename|
             p data
             throw "Unknown category for #{data[5]}"
         end
+        
+        data[8] = 'Esme (House Cleaning)' if nil != data[8] && data[8].index('Esme') != nil
     
         column = 0
         data.each() { |item|
