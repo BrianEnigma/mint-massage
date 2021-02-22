@@ -1,131 +1,141 @@
 #!/usr/bin/ruby
 require "csv"
 
+year_filter = 2019
+
 # Output files for this year
-out_income = File.new("expenses-2017-income.csv", "w")
-out_expenses = File.new("expenses-2017-expenses.csv", "w")
+out_income = File.new("expenses-2019-income.csv", "w")
+out_expenses = File.new("expenses-2019-expenses.csv", "w")
 
 # Map specific categories to general categories
 MAP = {
     "Cash & ATM" => "Cash",
     "Transfer for Cash Spending" => "Cash",
     
-    "Movies & DVDs" => "Entertainment",
-    "Date Night" => "Entertainment",
-    "Restaurants" => "Entertainment",
-    "Coffee Shops" => "Entertainment",
     "Alcohol & Bars" => "Entertainment",
-    "Lunch" => "Entertainment",
+    "Amusement" => "Shopping",
+    "Books" => "Entertainment",
+    "Coffee Shops" => "Entertainment",
+    "Date Night" => "Entertainment",
+    "Entertainment" => "Entertainment",
     "Fast Food" => "Entertainment",
     "Food & Dining" => "Entertainment",
-    "Entertainment" => "Entertainment",
-    "Books" => "Entertainment",
+    "Kids Activities" => "Entertainment",
+    "Lunch" => "Entertainment",
+    "Movies & DVDs" => "Entertainment",
     "Music" => "Entertainment",
+    "Restaurants" => "Entertainment",
     "Television" => "Entertainment",
     
     "Education" => "Education",
     "Tuition" => "Education",
 
-    "Student Loan" => "Financial",
-    "Life Insurance" => "Financial",
     "ATM Fee" => "Financial",
     "Bank Fee" => "Financial",
-    "Financial" => "Financial",
-    "Loan Payment" => "Financial",
     "Fees & Charges" => "Financial",
-    "Financial Advisor" => "Financial",
     "Finance Charge" => "Financial",
+    "Financial Advisor" => "Financial",
+    "Financial" => "Financial",
     "Late Fee" => "Financial",
     "Legal" => "Financial",
+    "Loan Payment" => "Financial",
+    "Student Loan" => "Financial",
+
+    "Life Insurance" => "Life Insurance",
+
+    "Charity" => "Charity",
 
     "Gift" => "Gift",
-    "Charity" => "Gift",
     "Gifts & Donations" => "Gift",
 
-    "Gym" => "Health",
-    "Pharmacy" => "Health",
-    "Health & Fitness" => "Health",
     "Eyecare" => "Health",
+    "Gym" => "Health",
+    "Health & Fitness" => "Health",
+    "Pharmacy" => "Health",
 
-    "Home Improvement" => "Home",
     "Furnishings" => "Home",
+    "Home Improvement" => "Home",
+    "Home Services" => "Home",
+    "Home Supplies" => "Home",
+    "Home" => "Home",
     "Lawn & Garden" => "Home",
     "Mortgage & Rent" => "Home",
-    "Home Supplies" => "Home",
-    "Home Services" => "Home",
-    "Home" => "Home",
     
-    "Paycheck" => "Paycheck",
     "Bonus" => "Paycheck",
+    "Paycheck" => "Paycheck",
 
     "Groceries" => "Groceries",
 
-    "Interest Income" => "Income",
-    "Income" => "Income",
     "Deposit" => "Income",
+    "Income" => "Income",
+    "Interest Income" => "Income",
 
     "Investments" => "Investments",
     
     "Dentist" => "Medical",
-    "Massage Therapy" => "Medical",
     "Doctor" => "Medical",
+    "Massage Therapy" => "Medical",
 
     "Pet Food & Supplies" => "Pets",
-    "Veterinary" => "Pets",
     "Pets" => "Pets",
+    "Veterinary" => "Pets",
 
-    "Electronics & Software" => "Shopping",
-    "Hobbies" => "Shopping",
-    "Hair" => "Shopping",
-    "Clothing" => "Shopping",
-    "Shopping" => "Shopping",
-    "Personal Care" => "Shopping",
     "Arts" => "Shopping",
-    "Office Supplies" => "Shopping",
-    "Shipping" => "Shopping",
-    "Sporting Goods" => "Shopping",
-    "Spa & Massage" => "Shopping",
-    "Printing" => "Shopping",
+    "Clothing" => "Shopping",
+    "Electronics & Software" => "Shopping",
+    "Hair" => "Shopping",
+    "Hobbies" => "Shopping",
     "Newspapers & Magazines" => "Shopping",
+    "Office Supplies" => "Shopping",
+    "Personal Care" => "Shopping",
+    "Printing" => "Shopping",
+    "Shipping" => "Shopping",
+    "Shopping" => "Shopping",
+    "Spa & Massage" => "Shopping",
+    "Sporting Goods" => "Shopping",
 
-    "State Tax" => "Taxes",
+    "Spousal Support" => "Spousal Support",
+
     "Federal Tax" => "Taxes",
     "Local Tax" => "Taxes",
+    "State Tax" => "Taxes",
     "Taxes" => "Taxes",
     
-    "Rental Car & Taxi" => "Travel",
     "Air Travel" => "Travel",
     "Hotel" => "Travel",
     "Hotels" => "Travel",
-    "Vacation" => "Travel",
+    "Rental Car & Taxi" => "Travel",
     "Travel" => "Travel",
+    "Vacation" => "Travel",
 
+    "Bills & Utilities" => "Utilities",
+    "Business Services" => "Utilities",
+    "Home Phone" => "Utilities",
     "Internet" => "Utilities",
     "Mobile Phone" => "Utilities",
     "Utilities" => "Utilities",
-    "Business Services" => "Utilities",
-    "Bills & Utilities" => "Utilities",
-    "Home Phone" => "Utilities",
 
-    "Public Transportation" => "Vehicles",
-    "Gas & Fuel" => "Vehicles",
-    "Auto Insurance" => "Vehicles",
-    "Service & Parts" => "Vehicles",
     "Auto & Transport" => "Vehicles",
-    "Parking" => "Vehicles",
+    "Auto Insurance" => "Vehicles",
     "Auto Payment" => "Vehicles",
-    
-    "Uncategorized" => "Uncategorized",
-    "Check" => "Uncategorized",
+    "Gas & Fuel" => "Vehicles",
+    "Parking" => "Vehicles",
+    "Public Transportation" => "Vehicles",
+    "Service & Parts" => "Vehicles",
 
-    "Transfer" => "Transfer",
-    "Credit Card Payment" => "Transfer"
+    "Check" => "Uncategorized",
+    "Uncategorized" => "Uncategorized",
+
+    "Credit Card Payment" => "Transfer",
+    "Transfer" => "Transfer"
 }
 
 if 0 == ARGV.length
     print "Error: put CSV file(s) on command line"
     exit 1
 end
+
+year_filter_string = "/#{year_filter}"
 
 ARGV.each { |input_filename|
 
@@ -140,7 +150,9 @@ ARGV.each { |input_filename|
         data = big_data[0]
         #print "#{line}\n"
         #p big_data
-    
+        next if data[0].to_s().index(year_filter_string) == nil
+        data[0] = "0#{data[0]}" if data[0].length == 9 # Cheap way to zero-pad the month. Day is already zero-padded.
+
         out = nil
         if data[4] == "debit"
             out = out_expenses
@@ -155,9 +167,25 @@ ARGV.each { |input_filename|
             p data
             throw "Unknown category for #{data[5]}"
         end
-        
+
+        #p data
+        # Update Notes
         data[8] = 'Esme (House Cleaning)' if nil != data[8] && data[8].index('Esme') != nil
-    
+        # Update name+category
+        if nil != data[2] && data[2].index('AMERIPRISE') != nil
+            if data[3].to_i > 400
+                data[1] = 'RiverSource Universal Life (Ameriprise)'
+                category = 'Life Insurance'
+            else
+                data[1] = 'RiverSource Disability Life (Ameriprise)'
+                category = 'Financial'
+            end
+        end
+        if nil != data[2] && data[2].index('LPL') != nil && data[3].to_i > 400
+            category = 'Transfer'
+        end
+        #p data
+
         column = 0
         data.each() { |item|
             column += 1
