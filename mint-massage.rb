@@ -1,11 +1,11 @@
 #!/usr/bin/ruby
 require "csv"
 
-year_filter = 2019
+year_filter = 2020
 
 # Output files for this year
-out_income = File.new("expenses-2019-income.csv", "w")
-out_expenses = File.new("expenses-2019-expenses.csv", "w")
+out_income = File.new("expenses-2020-income.csv", "w")
+out_expenses = File.new("expenses-2020-expenses.csv", "w")
 
 # Map specific categories to general categories
 MAP = {
@@ -60,6 +60,7 @@ MAP = {
     "Home" => "Home",
     "Lawn & Garden" => "Home",
     "Mortgage & Rent" => "Home",
+    "Home Insurance" => "Home",
     
     "Bonus" => "Paycheck",
     "Paycheck" => "Paycheck",
