@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
-YEAR=2020
+YEAR=2021
 
-./mint-massage.rb amazon_card.csv amazon_card-old.csv house_card.csv joint_checking.csv solo_checking.csv
+./mint-massage.rb $YEAR chase-amazon_card.csv \
+    chase-house_card.csv \
+    chase-joint_checking.csv \
+    chase-solo_checking.csv
 
 ## GNU `tac` command. Installed via `brew install coreutils`
 #gtac expenses-$YEAR-expenses.csv > temp.csv; mv temp.csv expenses-$YEAR-expenses.csv; rm -f temp.csv
