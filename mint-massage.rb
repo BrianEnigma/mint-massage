@@ -1,11 +1,23 @@
 #!/usr/bin/ruby
 require "csv"
 
-year_filter = 2020
+program_arguments = ARGV
+
+if program_arguments.length < 2
+    print "Error: put year and CSV file(s) on command line"
+    exit 1
+end
+
+year_filter = Integer(program_arguments[0])
+program_arguments.shift()
+if year_filter < 2000
+  print "Error in year. Did you put the wrong value?"
+  exit 1
+end
 
 # Output files for this year
-out_income = File.new("expenses-2020-income.csv", "w")
-out_expenses = File.new("expenses-2020-expenses.csv", "w")
+out_income = File.new("expenses-" + year_filter.to_s() + "-income.csv", "w")
+out_expenses = File.new("expenses-" + year_filter.to_s() + "-expenses.csv", "w")
 
 # Map specific categories to general categories
 MAP = {
@@ -65,6 +77,7 @@ MAP = {
     "Bonus" => "Paycheck",
     "Paycheck" => "Paycheck",
 
+    "Food Delivery" => "Groceries",
     "Groceries" => "Groceries",
 
     "Deposit" => "Income",
@@ -122,23 +135,25 @@ MAP = {
     "Gas & Fuel" => "Vehicles",
     "Parking" => "Vehicles",
     "Public Transportation" => "Vehicles",
+    "Ride Share" => "Vehicles",
     "Service & Parts" => "Vehicles",
 
     "Check" => "Uncategorized",
     "Uncategorized" => "Uncategorized",
 
     "Credit Card Payment" => "Transfer",
+    "Reimbursement" => "Transfer",
     "Transfer" => "Transfer"
 }
 
-if 0 == ARGV.length
+if program_arguments == ARGV.length
     print "Error: put CSV file(s) on command line"
     exit 1
 end
 
 year_filter_string = "/#{year_filter}"
 
-ARGV.each { |input_filename|
+program_arguments.each { |input_filename|
 
     f = File.new(input_filename, "r")
 
